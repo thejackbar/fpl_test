@@ -18,11 +18,11 @@ fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Posit
 # Streamlit web app setup
 st.title("Fantasy Football Team Tracker")
 
-# Editable data table using beta_columns and form for compatibility
+# Editable data table using form and columns for compatibility
 with st.form("team_form"):
     edited_team = fantasy_team.copy()
     for idx, row in edited_team.iterrows():
-        cols = st.beta_columns(3)
+        cols = st.columns(3)
         edited_team.at[idx, 'Player Name'] = cols[0].text_input(f"Player Name {idx+1}", row['Player Name'])
         edited_team.at[idx, 'Position'] = cols[1].selectbox(f"Position {idx+1}", options=positions, index=positions.index(row['Position']) if row['Position'] in positions else 0)
         edited_team.at[idx, 'Price (M)'] = cols[2].number_input(f"Price (M) {idx+1}", min_value=0.0, max_value=20.0, value=row['Price (M)'])
