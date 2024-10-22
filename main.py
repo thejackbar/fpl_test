@@ -18,8 +18,15 @@ fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Posit
 # Streamlit web app setup
 st.title("Fantasy Football Team Tracker")
 
-# Editable data table
-edited_team = st.experimental_data_editor(fantasy_team, use_container_width=True)
+# Editable data table using beta_columns and form for compatibility
+with st.form("team_form"):
+    edited_team = fantasy_team.copy()
+    for idx, row in edited_team.iterrows():
+        cols = st.beta_columns(3)
+        edited_team.at[idx, 'Player Name'] = cols[0].text_input(f"Player Name {idx+1}", row['Player Name'])
+        edited_team.at[idx, 'Position'] = cols[1].selectbox(f"Position {idx+1}", options=positions, index=positions.index(row['Position']) if row['Position'] in positions else 0)
+        edited_team.at[idx, 'Price (M)'] = cols[2].number_input(f"Price (M) {idx+1}", min_value=0.0, max_value=20.0, value=row['Price (M)'])
+    submitted = st.form_submit_button("Update Team")
 
 # Function to calculate the total price of the team
 def calculate_total_price(team_df):
@@ -29,12 +36,12 @@ def calculate_total_price(team_df):
 budget = 100  # The total budget available
 
 # Calculating total price and displaying results
-total_price = calculate_total_price(edited_team)
-
-if total_price > budget:
-    st.warning(f"Warning: Your total team price of {total_price}M exceeds the budget of {budget}M.")
-else:
-    st.success(f"Your total team price is {total_price}M, within the budget of {budget}M.")
+if submitted:
+    total_price = calculate_total_price(edited_team)
+    if total_price > budget:
+        st.warning(f"Warning: Your total team price of {total_price}M exceeds the budget of {budget}M.")
+    else:
+        st.success(f"Your total team price is {total_price}M, within the budget of {budget}M.")
 
 # Export to Excel
 excel_buffer = io.BytesIO()
