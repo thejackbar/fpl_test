@@ -10,10 +10,10 @@ positions = ['GK', 'DEF', 'MID', 'ATT']
 fantasy_team = pd.DataFrame(columns=columns)
 
 # Adding empty rows for each player position
-fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'GK', 'Price (M)': 0} for _ in range(2)])], ignore_index=True)
-fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'DEF', 'Price (M)': 0} for _ in range(5)])], ignore_index=True)
-fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'MID', 'Price (M)': 0} for _ in range(5)])], ignore_index=True)
-fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'ATT', 'Price (M)': 0} for _ in range(3)])], ignore_index=True)
+fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'GK', 'Price (M)': 0.0} for _ in range(2)])], ignore_index=True)
+fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'DEF', 'Price (M)': 0.0} for _ in range(5)])], ignore_index=True)
+fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'MID', 'Price (M)': 0.0} for _ in range(5)])], ignore_index=True)
+fantasy_team = pd.concat([fantasy_team, pd.DataFrame([{'Player Name': '', 'Position': 'ATT', 'Price (M)': 0.0} for _ in range(3)])], ignore_index=True)
 
 # Streamlit web app setup
 st.title("Fantasy Football Team Tracker")
@@ -25,7 +25,7 @@ with st.form("team_form"):
         cols = st.columns(3)
         edited_team.at[idx, 'Player Name'] = cols[0].text_input(f"Player Name {idx+1}", row['Player Name'])
         edited_team.at[idx, 'Position'] = cols[1].selectbox(f"Position {idx+1}", options=positions, index=positions.index(row['Position']) if row['Position'] in positions else 0)
-        edited_team.at[idx, 'Price (M)'] = cols[2].number_input(f"Price (M) {idx+1}", min_value=0.0, max_value=20.0, value=row['Price (M)'])
+        edited_team.at[idx, 'Price (M)'] = cols[2].number_input(f"Price (M) {idx+1}", min_value=0.0, max_value=20.0, value=float(row['Price (M)']))
     submitted = st.form_submit_button("Update Team")
 
 # Function to calculate the total price of the team
